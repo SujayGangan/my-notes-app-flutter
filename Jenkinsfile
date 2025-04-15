@@ -14,17 +14,24 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
+        stage('Checkout') {
             steps {
-                cleanWs()
+                script {
+                    def gitRepoUrl = 'https://github.com/SujayGangan/my-notes-app-flutter.git'
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: '*/main']],
+                        userRemoteConfigs: [[url: gitRepoUrl]],
+                        extensions: [[$class: 'CleanBeforeCheckout']]
+                    ])
+                }
             }
         }
 
         stage('Flutter Version Check') {
             steps {
                 sh '''
-                    echo "🔍 Checking Flutter version..."
-                    flutter --version || { echo "❌ Flutter not found!"; exit 1; }
+                echo "🔍 Checking Flutter version..."
+                flutter --version || { echo "❌ Flutter not found!"; exit 1; }
                 '''
             }
         }
@@ -32,8 +39,8 @@ pipeline {
         stage('Accept Android Licenses') {
             steps {
                 sh '''
-                    echo "📄 Accepting Android SDK Licenses..."
-                    yes | sdkmanager --licenses || { echo "❌ Failed to accept licenses!"; exit 1; }
+                echo "📄 Accepting Android SDK Licenses..."
+                yes | sdkmanager --licenses || { echo "❌ Failed to accept licenses!"; exit 1; }
                 '''
             }
         }
@@ -41,8 +48,8 @@ pipeline {
         stage('Get Dependencies') {
             steps {
                 sh '''
-                    echo "📦 Getting Flutter dependencies..."
-                    flutter pub get || { echo "❌ Failed to get dependencies!"; exit 1; }
+                echo "📦 Getting Flutter dependencies..."
+                flutter pub get || { echo "❌ Failed to get dependencies!"; exit 1; }
                 '''
             }
         }
@@ -50,8 +57,8 @@ pipeline {
         stage('Analyze Code') {
             steps {
                 sh '''
-                    echo "🧐 Running Flutter analyze..."
-                    flutter analyze || { echo "❌ Code analysis failed!"; exit 1; }
+                echo "🧐 Running Flutter analyze..."
+                flutter analyze || { echo "❌ Code analysis failed!"; exit 1; }
                 '''
             }
         }
@@ -59,26 +66,31 @@ pipeline {
         stage('Run Tests') {
             steps {
                 sh '''
-                    echo "🧪 Running Flutter tests..."
-                    flutter test || { echo "❌ Tests failed!"; exit 1; }
+                echo "🧪 Running Flutter tests..."
+                flutter test || { echo "❌ Tests failed!"; exit 1; }
                 '''
             }
         }
 
-        stage('Build APK') {
-            steps {
-                sh '''
-                    echo "📦 Building Flutter APK..."
-                    flutter build apk --release -v || { echo "❌ APK build failed!"; exit 1; }
-                '''
-            }
-        }
+        // stage('Build APK') {
+        //     steps {
+        //         sh '''
+        //         echo "📦 Building Flutter APK..."
+        //         export ORG_GRADLE_PROJECT_flutterBuildMode=release
+        //         flutter build apk --release -v || { echo "❌ APK build failed!"; exit 1; }
+        //         '''
+        //     }
+        // }
 
-        stage('Archive APK') {
-            steps {
-                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
-            }
-        }
+        // stage('Deploy / Output') {
+        //     steps {
+        //         sh '''
+        //         echo "🚀 Build complete! Checking output..."
+        //         echo "ENV VAR: $MY_ENV_VAR"
+        //         ls -lah build/app/outputs/flutter-apk/ || { echo "❌ APK output not found!"; exit 1; }
+        //         '''
+        //     }
+        // }
     }
 
     post {

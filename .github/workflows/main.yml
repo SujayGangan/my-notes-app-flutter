@@ -1,22 +1,20 @@
-name: Flutter Build APK
+name: Flutter Android CI
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
   build:
+    name: Build APK
     runs-on: ubuntu-latest
 
-    env:
-      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Java
@@ -25,29 +23,25 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
-          cache: true
+          flutter-version: '3.19.0'
 
-      - name: Flutter Version
-        run: flutter --version
-
-      - name: Get Dependencies
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: Analyze Code
+      - name: Analyze code
         run: flutter analyze
 
-      - name: Run Tests
+      - name: Run tests
         run: flutter test
 
       - name: Build APK
         run: flutter build apk --release
 
-      - name: Upload APK Artifact
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release-apk
+          name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk

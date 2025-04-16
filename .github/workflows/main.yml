@@ -1,3 +1,4 @@
+name: "Build & Release apk"
 on:
   push:
     branches:
@@ -5,7 +6,8 @@ on:
   pull_request:
     branches:
       - main
-name: "Build & Release apk"
+permissions:
+  contents: write
 jobs:
   build:
     name: Build APK

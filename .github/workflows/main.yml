@@ -5,7 +5,7 @@ on:
   pull_request:
     branches:
       - main
-
+name: "Build & Release apk"
 jobs:
   build:
     name: Build APK
@@ -33,4 +33,11 @@ jobs:
         run: flutter analyze
 
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --split-per-abi
+      
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.GITHUB_TOKEN }}

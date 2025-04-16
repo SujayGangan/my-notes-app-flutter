@@ -24,6 +24,22 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     );
   }
 
+  // void _saveNote() async {
+  //   if (_formKey.currentState!.validate()) {
+  //     final newNote = Note(
+  //       id: widget.note?.id,
+  //       title: _titleController.text,
+  //       description: _descriptionController.text,
+  //     );
+  //     if (widget.note == null) {
+  //       await NotesDatabase.instance.create(newNote);
+  //     } else {
+  //       await NotesDatabase.instance.update(newNote);
+  //     }
+  //     Navigator.of(context).pop();
+  //   }
+  // }
+
   void _saveNote() async {
     if (_formKey.currentState!.validate()) {
       final newNote = Note(
@@ -31,12 +47,20 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
         title: _titleController.text,
         description: _descriptionController.text,
       );
+
+      // Store context in a local variable
+      final currentContext = context;
+
       if (widget.note == null) {
         await NotesDatabase.instance.create(newNote);
       } else {
         await NotesDatabase.instance.update(newNote);
       }
-      Navigator.of(context).pop();
+
+      // Use the stored context to navigate
+      if (currentContext.mounted) {
+        Navigator.of(currentContext).pop();
+      }
     }
   }
 

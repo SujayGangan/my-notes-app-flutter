@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     environment {
-        FLUTTER_HOME = "/home/sujay/flutter"
-        JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
-        ANDROID_SDK_ROOT = "/home/sujay/android-sdk"
-        PATH = "${FLUTTER_HOME}/bin:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${JAVA_HOME}/bin:${env.PATH}"
-        GRADLE_OPTS = "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx2048m"
+        // FLUTTER_HOME = "/home/sujay/flutter"
+        // JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
+        // ANDROID_SDK_ROOT = "/home/sujay/android-sdk"
+        // PATH = "${FLUTTER_HOME}/bin:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${JAVA_HOME}/bin:${env.PATH}"
+        // GRADLE_OPTS = "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx2048m"
     }
 
     options {
@@ -72,25 +72,25 @@ pipeline {
             }
         }
 
-        // stage('Build APK') {
-        //     steps {
-        //         sh '''
-        //         echo "📦 Building Flutter APK..."
-        //         export ORG_GRADLE_PROJECT_flutterBuildMode=release
-        //         flutter build apk --release -v || { echo "❌ APK build failed!"; exit 1; }
-        //         '''
-        //     }
-        // }
+        stage('Build APK') {
+            steps {
+                sh '''
+                echo "📦 Building Flutter APK..."
+                export ORG_GRADLE_PROJECT_flutterBuildMode=release
+                flutter build apk --release -v || { echo "❌ APK build failed!"; exit 1; }
+                '''
+            }
+        }
 
-        // stage('Deploy / Output') {
-        //     steps {
-        //         sh '''
-        //         echo "🚀 Build complete! Checking output..."
-        //         echo "ENV VAR: $MY_ENV_VAR"
-        //         ls -lah build/app/outputs/flutter-apk/ || { echo "❌ APK output not found!"; exit 1; }
-        //         '''
-        //     }
-        // }
+        stage('Deploy / Output') {
+            steps {
+                //        sh 'echo "ENV VAR: $MY_ENV_VAR"'
+                sh '''
+                echo "🚀 Build complete! Checking output..."
+                ls -lah build/app/outputs/flutter-apk/ || { echo "❌ APK output not found!"; exit 1; }
+                '''
+            }
+        }
     }
 
     post {

@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        PATH+FLUTTER = "/home/sujay/flutter/bin"
-        PATH+ANDROID_TOOLS = "/home/sujay/android-sdk/cmdline-tools/latest/bin"
-        PATH+ANDROID_PLATFORM = "/home/sujay/android-sdk/platform-tools"
+        FLUTTER = "/home/sujay/flutter/bin"
+        ANDROID_TOOLS = "/home/sujay/android-sdk/cmdline-tools/latest/bin"
+        ANDROID_PLATFORM = "/home/sujay/android-sdk/platform-tools"
         JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
         GRADLE_OPTS = "-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-Xmx2048m"
     }

@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        FLUTTER_HOME = "/home/sujay/flutter"
+        PATH+FLUTTER = "/home/sujay/flutter/bin"
         JAVA_HOME = "/usr/lib/jvm/java-21-openjdk-amd64"
         // ANDROID_SDK_ROOT = "/home/sujay/android-sdk"
         // PATH = "${FLUTTER_HOME}/bin:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin:${ANDROID_SDK_ROOT}/platform-tools:${JAVA_HOME}/bin:${env.PATH}"
